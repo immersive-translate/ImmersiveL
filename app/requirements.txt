@@ -1,0 +1,4 @@
+flask
+transformers
+torch
+deepspeed
