@@ -45,7 +45,7 @@ GEN_PARAMS = {
     "num_beams": 48,
     "num_beam_groups": 12,
     "no_repeat_ngram_size": 20,
-    "diversity_penalty": 0,
+    "diversity_penalty": 0.0,
     "repetition_penalty": 1.4,
     "length_penalty": 0.9,
 }
