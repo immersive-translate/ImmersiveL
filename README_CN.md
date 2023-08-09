@@ -2,7 +2,9 @@
 
 ImmersiveL 是一个连接世界各地语言的框架和模型中心，它是开放且免费的。
 
-目前，ImmersiveL app 是基于 Deepspeed 的翻译框架。主要结构位于 `app` 目录中，由 Python 3.8、Flask、Deepspeed 和 PyTorch 环境组成。
+目前，ImmersiveL app 是基于 Deepspeed 的翻译框架。主要结构位于 `app` 目录中，由 Python 3.8+、Flask、Deepspeed 和 PyTorch 环境组成。
+
+**目前的第一个模型是基于bloomz模型进行训练的，其许可证可以在[这里](https://bigscience.huggingface.co/blog/the-bigscience-rail-license)找到。Apache许可证授权给该模型的派生部分以及此仓库中的其他源代码文件。**
 
 🌐 **阅读 [English (英文)](README.md) 版本**
 
