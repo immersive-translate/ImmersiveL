@@ -28,19 +28,11 @@ Now, ImmersiveL app is a translation framework based on Deepspeed. The primary s
    pip install -r requirements.txt
    ```
 
-3. **Install Dependencies**
-
-   Install all the necessary packages listed in `requirements.txt`.
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Download the Model**
+3. **Download the Model**
 
    The models can be found at [this Huggingface link](https://huggingface.co/funstoryai/immersiveL-exp/tree/main). Download the files under the "Files and versions" section and place them into the `app/model` directory.
 
-5. **Run the Application**
+4. **Run the Application**
 
    Start the application using Deepspeed with the following command:
 
