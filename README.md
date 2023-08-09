@@ -4,6 +4,8 @@ ImmersiveL is a framework and models hub for connecting languages all over the w
 
 Now, ImmersiveL app is a translation framework based on Deepspeed. The primary structure is found within the `app` directory, composed of a Python 3.8 environment with Flask, Deepspeed, and PyTorch.
 
+** The first model for now are trained on a bloomz model, Its license could be found at [here](https://bigscience.huggingface.co/blog/the-bigscience-rail-license)
+
 🌐 **Read in [Chinese (中文)](README_CN.md)**
 
 ## Getting Started
