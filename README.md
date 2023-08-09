@@ -2,7 +2,7 @@
 
 ImmersiveL is a framework and models hub for connecting languages all over the world open and free.
 
-Now, ImmersiveL app is a translation framework based on Deepspeed. The primary structure is found within the `app` directory, composed of a Python 3.8 environment with Flask, Deepspeed, and PyTorch.
+Now, ImmersiveL app is a translation framework based on Deepspeed. The primary structure is found within the `app` directory, composed of a Python 3.8+ environment with Flask, Deepspeed, and PyTorch.
 
 **The first model for now are trained on a bloomz model, its license could be found at [here](https://bigscience.huggingface.co/blog/the-bigscience-rail-license). The Apache License are licensed to the derived part of the model and other source code file in this repo.**
 
@@ -28,19 +28,11 @@ Now, ImmersiveL app is a translation framework based on Deepspeed. The primary s
    pip install -r requirements.txt
    ```
 
-3. **Install Dependencies**
-
-   Install all the necessary packages listed in `requirements.txt`.
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Download the Model**
+3. **Download the Model**
 
    The models can be found at [this Huggingface link](https://huggingface.co/funstoryai/immersiveL-exp/tree/main). Download the files under the "Files and versions" section and place them into the `app/model` directory.
 
-5. **Run the Application**
+4. **Run the Application**
 
    Start the application using Deepspeed with the following command:
 
@@ -48,7 +40,7 @@ Now, ImmersiveL app is a translation framework based on Deepspeed. The primary s
    deepspeed --num_gpus 1 app.py
    ```
 
-    Once you see a message similar to * Running on [IP Address], it indicates that the application has successfully started.
+    Once you see a message similar to `* Running on [IP Address]`, it indicates that the application has successfully started.
 
 ## Using ImmersiveL
 
