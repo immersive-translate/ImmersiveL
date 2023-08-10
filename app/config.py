@@ -1,5 +1,5 @@
 # config.py
-MODEL_NAME = "./model"
+MODEL_NAME = "funstoryai/immersiveL-exp"
 CUDA_VISIBLE_DEVICES = "0"
 NUM_THREADS = 1
 DEFAULT_PORT = 7000

@@ -6,7 +6,6 @@ Now, ImmersiveL app is a translation framework based on Deepspeed. The primary s
 
 **The first model for now are trained on a bloomz model, its license could be found at [here](https://bigscience.huggingface.co/blog/the-bigscience-rail-license). The Apache License are licensed to the derived part of the model and other source code file in this repo.**
 
-
 🌐 **Read in [Chinese (中文)](README_CN.md)**
 
 ## Getting Started
@@ -28,11 +27,7 @@ Now, ImmersiveL app is a translation framework based on Deepspeed. The primary s
    pip install -r requirements.txt
    ```
 
-3. **Download the Model**
-
-   The models can be found at [this Huggingface link](https://huggingface.co/funstoryai/immersiveL-exp/tree/main). Download the files under the "Files and versions" section and place them into the `app/model` directory.
-
-4. **Run the Application**
+3. **Run the Application**
 
    Start the application using Deepspeed with the following command:
 
