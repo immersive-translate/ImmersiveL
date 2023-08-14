@@ -48,13 +48,13 @@ Once the application is up and running, you can easily use the provided translat
 ### Example 1: Translating from Chinese to English
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"text": "欧洲经济增长仍面临较大挑战", "task": "zh2en"}' http://localhost:7000/translate
+curl -X POST -H "Content-Type: application/json" -d '{"text": "欧洲经济增长仍面临较大挑战", "task": "zh2en"}' http://localhost:7000/v1/translate
 ```
 
 ### Example 2: Translating from English to Chinese
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"text": "Want to live longer? Play with your grandkids. It’s good for them, too.", "task": "en2zh"}' http://localhost:7000/translate
+curl -X POST -H "Content-Type: application/json" -d '{"text": "Want to live longer? Play with your grandkids. It’s good for them, too.", "task": "en2zh"}' http://localhost:7000/v1/translate
 ```
 
 ## API Example

@@ -50,6 +50,7 @@ def generate_input_prompt(text, task, terms=None):
 
 
 @app.route("/translate", methods=["POST"])
+@app.route("/v1/translate", methods=["POST"])
 def get_translation():
     content = request.json
     text = content['text']

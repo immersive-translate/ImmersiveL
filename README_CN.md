@@ -48,13 +48,13 @@ ImmersiveL是一个框架和模型中心，旨在自由连接世界各地的语�
 ### 示例1：从中文翻译为英文
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"text": "欧洲经济增长仍面临较大挑战", "task": "zh2en"}' http://localhost:7000/translate
+curl -X POST -H "Content-Type: application/json" -d '{"text": "欧洲经济增长仍面临较大挑战", "task": "zh2en"}' http://localhost:7000/v1/translate
 ```
 
 ### 示例2：从英文翻译为中文
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"text": "Want to live longer? Play with your grandkids. It’s good for them, too.", "task": "en2zh"}' http://localhost:7000/translate
+curl -X POST -H "Content-Type: application/json" -d '{"text": "Want to live longer? Play with your grandkids. It’s good for them, too.", "task": "en2zh"}' http://localhost:7000/v1/translate
 ```
 
 ## API示例
