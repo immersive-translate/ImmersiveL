@@ -27,13 +27,19 @@ Now, ImmersiveL app is a Chinese-English bidirectional translation framework bas
 
 2. **Run the Application**
 
-   Start the application using Deepspeed with the following command:
+   If you're using a Linux environment, start the application using Deepspeed with the following command:
 
    ```bash
    deepspeed --num_gpus 1 app.py
    ```
 
-    Once you see a message similar to `* Running on [IP Address]`, it indicates that the application has successfully started.
+   For Windows users:
+
+   ```bash
+   python app_win.py
+   ```
+
+   Once you see a message similar to `* Running on [IP Address]`, it indicates that the application has successfully started.
 
 ## Using ImmersiveL
 
