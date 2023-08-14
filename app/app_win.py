@@ -3,7 +3,6 @@ from flask import make_response
 import os
 import torch
 from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM
-import deepspeed
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -11,17 +10,15 @@ app.config.from_pyfile('config.py')
 # 从配置文件加载配置
 model_name = app.config["MODEL_NAME"]
 os.environ["CUDA_VISIBLE_DEVICES"] = app.config["CUDA_VISIBLE_DEVICES"]
-os.environ['TORCH_DISTRIBUTED_DEFAULT_PORT'] = app.config["TORCH_DISTRIBUTED_DEFAULT_PORT"]
 
 torch.set_num_threads(app.config["NUM_THREADS"])
 
 dtype = torch.bfloat16
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-config = AutoConfig.from_pretrained(model_name)
-
-ds_engine = deepspeed.initialize(model=AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16), config_params=app.config["DS_CONFIG"])[0]
-ds_engine.module.eval()
-model = ds_engine.module
+model = AutoModelForCausalLM.from_pretrained(
+    model_name, torch_dtype=torch.bfloat16)
+model.eval()
+model.cuda()  # Ensure the model uses GPU
 
 # 根据task生成模型输入
 
@@ -74,7 +71,6 @@ def get_translation():
     if translation.startswith(prompt):
         translation = translation[len(prompt):]
 
-    
     # translation = prompt
     ret = {
         'data': {
@@ -95,8 +91,9 @@ def get_translation():
 
 
 if __name__ == "__main__":
-    # ps aux | grep app.py
-    # 启动命令：deepspeed --num_gpus 1 app.py
+    # 适用于Windows环境下的启动命令
+    # ps aux | grep app_win.py
+    # 启动命令：python app_win.py
 
     port = app.config["DEFAULT_PORT"]
     app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)
