@@ -11,8 +11,7 @@ app.config.from_pyfile('config.py')
 # 从配置文件加载配置
 model_name = app.config["MODEL_NAME"]
 PROMPT_DICT = app.config["PROMPT_DICT"]
-gen_params = app.config["GEN_PARAMS"]
-GEN_PARAMS = {
+gen_params = {
     "return_dict_in_generate": True,
     "output_scores": True,
     "max_new_tokens": 500,

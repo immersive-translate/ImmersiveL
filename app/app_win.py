@@ -9,11 +9,11 @@ app.config.from_pyfile('config.py')
 
 # 从配置文件加载配置
 model_name = app.config["MODEL_NAME"]
+gen_params = app.config["GEN_PARAMS"]
 PROMPT_DICT = app.config["PROMPT_DICT"]
 os.environ["CUDA_VISIBLE_DEVICES"] = app.config["CUDA_VISIBLE_DEVICES"]
 torch.set_num_threads(app.config["NUM_THREADS"])
 
-dtype = torch.bfloat16
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(
     model_name, torch_dtype=torch.bfloat16)
@@ -48,7 +48,6 @@ def get_translation():
     input_ids = inputs.input_ids.cuda()
 
     # 执行模型生成
-    gen_params = app.config["GEN_PARAMS"]
     gen_params["input_ids"] = input_ids
     outputs = model.generate(**gen_params)
     for s in outputs.sequences:
