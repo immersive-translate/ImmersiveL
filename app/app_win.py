@@ -9,8 +9,8 @@ app.config.from_pyfile('config.py')
 
 # 从配置文件加载配置
 model_name = app.config["MODEL_NAME"]
+PROMPT_DICT = app.config["PROMPT_DICT"]
 os.environ["CUDA_VISIBLE_DEVICES"] = app.config["CUDA_VISIBLE_DEVICES"]
-
 torch.set_num_threads(app.config["NUM_THREADS"])
 
 dtype = torch.bfloat16
@@ -24,19 +24,6 @@ model.cuda()  # Ensure the model uses GPU
 
 
 def generate_input_prompt(text, task, terms=None):
-    PROMPT_DICT = {
-        "en2zh": (
-            "下面是一段英文文本，请将它翻译成中文。\n"
-            "{terms}"
-            "#英文文本:\n{input}\n\n#中文翻译:\n"
-        ),
-        "zh2en": (
-            "下面是一段中文文本，请将它翻译成英文。\n"
-            "{terms}"
-            "#中文文本:\n{input}\n\n#英文翻译:\n"
-        ),
-    }
-
     terms_prompt = ""
     if terms:
         terms_prompt = "#需应用术语:\n"
@@ -54,13 +41,13 @@ def get_translation():
     task = content['task']
     terms = content.get('terms', None)
 
-    # # 生成模型输入
+    # 生成模型输入
     prompt = generate_input_prompt(text, task, terms)
 
     inputs = tokenizer(prompt, return_tensors="pt")
     input_ids = inputs.input_ids.cuda()
 
-    # # 执行模型生成
+    # 执行模型生成
     gen_params = app.config["GEN_PARAMS"]
     gen_params["input_ids"] = input_ids
     outputs = model.generate(**gen_params)
