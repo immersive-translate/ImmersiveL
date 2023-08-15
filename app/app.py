@@ -11,18 +11,34 @@ app.config.from_pyfile('config.py')
 # 从配置文件加载配置
 model_name = app.config["MODEL_NAME"]
 PROMPT_DICT = app.config["PROMPT_DICT"]
+gen_params = app.config["GEN_PARAMS"]
+GEN_PARAMS = {
+    "return_dict_in_generate": True,
+    "output_scores": True,
+    "max_new_tokens": 500,
+    "do_sample": False,
+    "temperature": 0,
+    "no_repeat_ngram_size": 20,
+    "repetition_penalty": 1.4,
+    "length_penalty": 0.9,
+}
+
 os.environ["CUDA_VISIBLE_DEVICES"] = app.config["CUDA_VISIBLE_DEVICES"]
 os.environ['TORCH_DISTRIBUTED_DEFAULT_PORT'] = app.config["TORCH_DISTRIBUTED_DEFAULT_PORT"]
 
 torch.set_num_threads(app.config["NUM_THREADS"])
 
-dtype = torch.bfloat16
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 config = AutoConfig.from_pretrained(model_name)
 
-ds_engine = deepspeed.initialize(model=AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.bfloat16), config_params=app.config["DS_CONFIG"])[0]
-ds_engine.module.eval()
-model = ds_engine.module
+orgin_model = AutoModelForCausalLM.from_pretrained(model_name)
+model = deepspeed.init_inference(
+    model=orgin_model,      # Transformers模型
+    mp_size=1,        # GPU数量
+    dtype=torch.float16,  # 权重类型(fp16)
+    replace_method="auto",  # 让DS自动替换层
+    replace_with_kernel_inject=True,  # 使用kernel injector替换
+)
 
 # 根据task生成模型输入
 
@@ -52,7 +68,6 @@ def get_translation():
     input_ids = inputs.input_ids.cuda()
 
     # 执行模型生成
-    gen_params = app.config["GEN_PARAMS"]
     gen_params["input_ids"] = input_ids
     outputs = model.generate(**gen_params)
     for s in outputs.sequences:
@@ -62,7 +77,6 @@ def get_translation():
     if translation.startswith(prompt):
         translation = translation[len(prompt):]
 
-    
     # translation = prompt
     ret = {
         'data': {
