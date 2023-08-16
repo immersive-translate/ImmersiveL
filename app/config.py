@@ -49,3 +49,9 @@ GEN_PARAMS = {
     "repetition_penalty": 1.4,
     "length_penalty": 0.9,
 }
+
+MAPPING = {
+    ("zh-CN", "en"): "zh2en",
+    ("en", "zh-CN"): "en2zh"
+    # 可以增加其他的语言对
+}
