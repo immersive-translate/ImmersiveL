@@ -4,7 +4,7 @@ ImmersiveL is a framework and models hub for connecting languages all over the w
 
 Now, ImmersiveL app is a Chinese-English bidirectional translation framework based on Deepspeed. The primary structure is found within the app directory, composed of a Python 3.8+ environment with Flask, Deepspeed, and PyTorch.
 
-**The first model for now are trained on a bloomz model, its license could be found at [here](https://bigscience.huggingface.co/blog/the-bigscience-rail-license). The Apache License are licensed to the derived part of the model and other source code file in this repo.**
+**The first model for now are trained on a bloomz model, its license can be found at [here](https://bigscience.huggingface.co/blog/the-bigscience-rail-license). The Apache License are licensed to the derived part of the model and other source code file in this repo.**
 
 🌐 **Read in [Chinese (中文)](README_CN.md)**
 
@@ -41,47 +41,72 @@ Now, ImmersiveL app is a Chinese-English bidirectional translation framework bas
 
    Once you see a message similar to `* Running on [IP Address]`, it indicates that the application has successfully started.
 
-## Using ImmersiveL
+3. **Test the Deployment**
 
-Once the application is up and running, you can easily use the provided translation endpoints.
+   Now that your application is up and running, test it by translating from Chinese to English:
 
-### Example 1: Translating from Chinese to English
+   ```bash
+   curl -X POST -H "Content-Type: application/json" -d '{"text": "欧洲经济增长仍面临较大挑战", "task": "zh2en"}' http://localhost:7000/v1/translate
+   ```
 
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{"text": "欧洲经济增长仍面临较大挑战", "task": "zh2en"}' http://localhost:7000/v1/translate
-```
+   If you get a translated result, it indicates that your deployment was successful.
 
-### Example 2: Translating from English to Chinese
+## API Endpoints
 
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{"text": "Want to live longer? Play with your grandkids. It’s good for them, too.", "task": "en2zh"}' http://localhost:7000/v1/translate
-```
+### 1. Immersive Translation (`/v1/immersive_translate`)
 
-## API Example
+#### Request
 
-### Request
+- **Method:** POST
+- **Content-Type:** application/json
 
 ```json
 {
-  "text": "欧洲经济增长仍面临较大挑战",
-  "task": "zh2en"  // Use "zh2en" for Chinese to English, and "en2zh" for English to Chinese translation.
+    "source_lang": "zh-CN",
+    "target_lang": "en",
+    "text_list": [
+        "这是一个测试句子",
+        "欧洲经济增长仍面临较大挑战"
+    ]
 }
 ```
 
-### Response
+- `source_lang`: Source language code.
+- `target_lang`: Target language code.
+- `text_list`: An array of text strings to be translated.
+
+#### Response
 
 For the given request:
 
 ```json
 {
-  "data": {
-    "translation": "Economic growth in Europe continues to face significant challenges",
-    "info": {}
-  }
+    "translations": [
+        {
+            "detected_source_lang": "zh-CN",
+            "text": "This is a test sentence"
+        },
+        {
+            "detected_source_lang": "zh-CN",
+            "text": "Economic growth in Europe continues to face significant challenges"
+        }
+    ]
 }
 ```
 
-### Parameters Description
+- `translations`: An array containing:
+  - `detected_source_lang`: The detected language code of the translated text.
+  - `text`: The translated text.
+
+#### Language Codes
+
+- `zh-CN`: Simplified Chinese
+- `en`: English
+
+### 2. Basic Translation (`/v1/translate`)
+
+- **Method:** POST
+- **Content-Type:** application/json
 
 #### Request Parameters
 

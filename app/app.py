@@ -21,6 +21,7 @@ gen_params = {
     "repetition_penalty": 1.4,
     "length_penalty": 0.9,
 }
+mapping = app.config["MAPPING"]
 
 os.environ["CUDA_VISIBLE_DEVICES"] = app.config["CUDA_VISIBLE_DEVICES"]
 os.environ['TORCH_DISTRIBUTED_DEFAULT_PORT'] = app.config["TORCH_DISTRIBUTED_DEFAULT_PORT"]
@@ -88,6 +89,58 @@ def get_translation():
                 'model_name': model_name,
             }
         }
+    }
+
+    response = make_response(jsonify(ret))
+    response.headers['Content-Type'] = 'application/json; charset=utf-8'
+    return response
+
+
+def translate_task(source_lang, target_lang):
+    return mapping.get((source_lang, target_lang))
+
+
+@app.route("/immersive_translate", methods=["POST"])
+@app.route("/v1/immersive_translate", methods=["POST"])
+def immersive_translation():
+    content = request.json
+    source_lang = content['source_lang']
+    target_lang = content['target_lang']
+    text_list = content['text_list']
+
+    # 根据语言对选择对应的task
+    task = translate_task(source_lang, target_lang)
+    # 如果没有对应的task，返回空
+    if not task:
+        translations = [{'detected_source_lang': None, 'text': None}
+                        for _ in text_list]
+        ret = {'translations': translations}
+        response = make_response(jsonify(ret))
+        response.headers['Content-Type'] = 'application/json; charset=utf-8'
+        return response
+
+    # 生成模型输入
+    prompts = [generate_input_prompt(text, task) for text in text_list]
+    inputs = tokenizer(prompts, return_tensors="pt",
+                       padding=True, truncation=True)
+    input_ids = inputs.input_ids.cuda()
+
+    gen_params["input_ids"] = input_ids
+    outputs = model.generate(**gen_params)
+
+    translations = []
+    # 从输出中提取翻译结果
+    for idx, s in enumerate(outputs.sequences):
+        translation = tokenizer.decode(s, skip_special_tokens=True)
+        if translation.startswith(prompts[idx]):
+            translation = translation[len(prompts[idx]):]
+        translations.append({
+            'detected_source_lang': source_lang,
+            'text': translation
+        })
+
+    ret = {
+        'translations': translations
     }
 
     response = make_response(jsonify(ret))
