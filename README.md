@@ -12,6 +12,8 @@ Now, ImmersiveL app is a Chinese-English bidirectional translation framework bas
 
 1. **Clone the Repository and Set Up the Environment**
 
+   We recommend using a Python 3.8+ and CUDA 11.8 environment.
+
    Start by cloning the ImmersiveL repository to your local machine:
 
    ```bash
