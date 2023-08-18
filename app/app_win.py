@@ -135,4 +135,4 @@ if __name__ == "__main__":
     # 启动命令：python app_win.py
 
     port = app.config["DEFAULT_PORT"]
-    app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)
+    app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False, threaded=False)
