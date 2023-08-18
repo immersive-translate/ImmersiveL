@@ -1,6 +1,6 @@
 # 自定义
 test_*.py
-util
+app/test/output
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
