@@ -1,6 +1,7 @@
 # 自定义
 test_*.py
 app/test/output
+sha.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -4,6 +4,7 @@ import os
 import torch
 from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM
 import deepspeed
+import requests
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -28,10 +29,58 @@ os.environ['TORCH_DISTRIBUTED_DEFAULT_PORT'] = app.config["TORCH_DISTRIBUTED_DEF
 
 torch.set_num_threads(app.config["NUM_THREADS"])
 
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-config = AutoConfig.from_pretrained(model_name)
 
-orgin_model = AutoModelForCausalLM.from_pretrained(model_name)
+# 读取或创建本地SHA文件
+def read_or_create_sha_file():
+    if os.path.exists('sha.txt'):
+        with open('sha.txt', 'r') as f:
+            return f.read().strip()
+    else:
+        return None
+
+# 写入新的SHA到本地文件
+
+
+def write_sha_to_file(new_sha):
+    with open('sha.txt', 'w') as f:
+        f.write(new_sha)
+
+# 获得最新的SHA
+
+
+def get_latest_sha(model_name):
+    response = requests.get(f"https://huggingface.co/api/models/{model_name}")
+    if response.status_code == 200:
+        remote_sha = response.json().get("sha")
+        return remote_sha.strip()
+    else:
+        print(f"Failed to check for updates: {response.content}")
+        return None
+
+
+# 读取本地SHA
+local_sha = read_or_create_sha_file()
+# 获取远程SHA
+remote_sha = get_latest_sha(model_name)
+
+# 是否需要更新
+should_update = local_sha is None or local_sha != remote_sha
+
+# 如果需要更新或者是第一次运行，则下载模型
+if should_update:
+    print("Downloading model..., this might take a while")
+    print(f"- Model name: {model_name}")
+
+orgin_model = AutoModelForCausalLM.from_pretrained(
+    model_name, force_download=should_update)
+tokenizer = AutoTokenizer.from_pretrained(
+    model_name, force_download=should_update)
+
+# 更新本地SHA文件
+if remote_sha:
+    write_sha_to_file(remote_sha)
+
+
 model = deepspeed.init_inference(
     model=orgin_model,      # Transformers模型
     mp_size=1,        # GPU数量
@@ -153,4 +202,5 @@ if __name__ == "__main__":
     # 启动命令：deepspeed --num_gpus 1 app.py
 
     port = app.config["DEFAULT_PORT"]
-    app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False, threaded=False)
+    app.run(host="0.0.0.0", port=port, debug=False,
+            use_reloader=False, threaded=False)
